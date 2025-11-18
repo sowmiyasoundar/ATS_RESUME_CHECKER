@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Analyzer</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #f7a817, #4f4ff3);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 850px;
+            background: rgba(255, 255, 255, 0.13);
+            border-radius: 20px;
+            padding: 35px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            color: rgb(245, 243, 244);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 28px;
+            letter-spacing: 1px;
+        }
+
+        label {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        textarea, input[type="file"] {
+            width: 100%;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: rgb(244, 243, 245);
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #6a5acd;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background: #7b6ff2;
+        }
+
+        .result-box {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 18px;
+            border-radius: 12px;
+            white-space: pre-wrap;
+            font-size: 16px;
+            line-height: 1.5em;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="container">
+        <h2>ATS Resume Analyzer</h2>
+
+        <form action="/analyze" method="post" enctype="multipart/form-data">
+
+            <label>Upload Resume (PDF Only)</label>
+            <input type="file" name="resume_file" required>
+
+            <label>Paste Job Description</label>
+            <textarea name="job_description" rows="6" placeholder="Paste JD here..." required></textarea>
+
+            <button type="submit">Analyze Resume</button>
+        </form>
+
+        {% if result %}
+        <div class="result-box">
+            <h3>Result:</h3>
+            {{ result }}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
