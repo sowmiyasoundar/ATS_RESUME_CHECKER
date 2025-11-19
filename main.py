@@ -94,3 +94,6 @@ Give output in this exact format:
         "request": request,
         "result": ai_output
     })
+@app.get("/healthz")
+def health_check():
+    return {"status": "ok"}
