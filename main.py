@@ -23,7 +23,7 @@ def extract_text_from_pdf(file_path):
             text += page_text + "\n"
     return text
 
-@app.get("/", response_class=HTMLResponse)
+@app.api_route("/", methods=["GET", "HEAD"], response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
