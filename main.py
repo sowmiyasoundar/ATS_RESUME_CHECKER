@@ -9,7 +9,6 @@ import PyPDF2
 # Load API Key
 load_dotenv()
 API_KEY = os.getenv("OPENROUTER_API_KEY")
-print("API_KEY =", API_KEY)  # Check if API key is loaded
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -29,10 +28,11 @@ def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 @app.post("/analyze", response_class=HTMLResponse)
-async def analyze(request: Request,
-                  job_description: str = Form(...),
-                  resume_file: UploadFile = File(...)):
-
+async def analyze(
+    request: Request,
+    job_description: str = Form(...),
+    resume_file: UploadFile = File(...)
+):
     # Save uploaded PDF
     uploads_dir = "uploads"
     if not os.path.exists(uploads_dir):
@@ -61,18 +61,17 @@ Give output in this exact format:
 
 1. **Match Score (0-100)**  
 2. **Missing Skills**  
-3. **Experience Mismatch** (Example: "Job expects 3 years, candidate has 1 year")  
-4. **Overall Comment** (short and clear)
+3. **Experience Mismatch**  
+4. **Overall Comment**
 """
 
-    # Send to OpenRouter Free Model
     headers = {
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json"
     }
 
     payload = {
-        "model": "openai/gpt-4o-mini",   # FREE model
+        "model": "openai/gpt-4o-mini",
         "messages": [
             {"role": "user", "content": prompt}
         ]
@@ -81,18 +80,15 @@ Give output in this exact format:
     try:
         response = requests.post(
             "https://openrouter.ai/api/v1/chat/completions",
-            json=payload, headers=headers, timeout=30
+            json=payload,
+            headers=headers,
+            timeout=30
         )
-        response.raise_for_status()  # Raise error if HTTP status != 200
-
+        response.raise_for_status()
         data = response.json()
-        # Safely get AI output
         ai_output = data.get("choices", [{}])[0].get("message", {}).get("content", "No output from AI.")
-
-    except requests.exceptions.RequestException as e:
-        ai_output = f"Error connecting to AI API: {e}"
     except Exception as e:
-        ai_output = f"Unexpected error: {e}"
+        ai_output = f"Error: {str(e)}"
 
     return templates.TemplateResponse("index.html", {
         "request": request,
